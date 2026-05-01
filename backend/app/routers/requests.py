@@ -6,6 +6,38 @@ from app.schemas import BorrowRequestCreate, BorrowRequestRead
 router = APIRouter(tags=["requests"])
 
 
+@router.get("/requests", response_model=list[BorrowRequestRead])
+def get_borrow_requests() -> list[BorrowRequestRead]:
+	client = get_supabase_client()
+	response = client.get(
+		"/rest/v1/borrow_requests",
+		params={
+			"select": "id,book_id,student_name,status,created_at,books(title)",
+			"order": "created_at.desc",
+		},
+	)
+
+	if response.status_code != 200:
+		raise HTTPException(status_code=500, detail="Failed to fetch requests")
+
+	rows = response.json()
+	requests: list[BorrowRequestRead] = []
+	for row in rows:
+		book_title = (row.get("books") or {}).get("title", "")
+		requests.append(
+			BorrowRequestRead(
+				id=row["id"],
+				book_id=row["book_id"],
+				book_title=book_title,
+				student_name=row["student_name"],
+				status=row["status"],
+				created_at=row["created_at"],
+			)
+		)
+
+	return requests
+
+
 @router.post("/borrow", response_model=BorrowRequestRead, status_code=201)
 def create_borrow_request(payload: BorrowRequestCreate) -> BorrowRequestRead:
 	student_name = payload.student_name.strip()
