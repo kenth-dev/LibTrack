@@ -147,3 +147,59 @@ def mark_request_as_borrowed(request_id: str) -> BorrowRequestRead:
 		status="Borrowed",
 		created_at=request_row["created_at"],
 	)
+
+
+@router.patch("/requests/{request_id}/return", response_model=BorrowRequestRead)
+def mark_request_as_returned(request_id: str) -> BorrowRequestRead:
+	client = get_supabase_client()
+
+	request_response = client.get(
+		"/rest/v1/borrow_requests",
+		params={
+			"select": "id,book_id,student_name,status,created_at,books(title)",
+			"id": f"eq.{request_id}",
+			"limit": 1,
+		},
+	)
+
+	if request_response.status_code != 200:
+		raise HTTPException(status_code=500, detail="Failed to fetch borrow request")
+
+	rows = request_response.json()
+	if not rows:
+		raise HTTPException(status_code=404, detail="Borrow request not found")
+
+	request_row = rows[0]
+	if request_row["status"] != "Borrowed":
+		raise HTTPException(
+			status_code=409,
+			detail="Only borrowed requests can be marked as Returned",
+		)
+
+	update_request_response = client.patch(
+		f"/rest/v1/borrow_requests?id=eq.{request_id}",
+		json={"status": "Returned"},
+	)
+
+	if update_request_response.status_code not in {200, 204}:
+		raise HTTPException(status_code=500, detail="Failed to update borrow request status")
+
+	book_id = request_row["book_id"]
+	update_book_response = client.patch(
+		f"/rest/v1/books?id=eq.{book_id}",
+		json={"status": "Available"},
+	)
+
+	if update_book_response.status_code not in {200, 204}:
+		raise HTTPException(status_code=500, detail="Failed to update book status")
+
+	book_title = (request_row.get("books") or {}).get("title", "")
+
+	return BorrowRequestRead(
+		id=request_row["id"],
+		book_id=book_id,
+		book_title=book_title,
+		student_name=request_row["student_name"],
+		status="Returned",
+		created_at=request_row["created_at"],
+	)
