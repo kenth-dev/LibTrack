@@ -24,8 +24,17 @@ class SupabaseClient:
     def get(self, path: str, params: dict[str, Any] | None = None) -> httpx.Response:
         return self._client.get(path, params=params, headers=self.headers())
 
-    def post(self, path: str, json: dict[str, Any]) -> httpx.Response:
-        return self._client.post(path, json=json, headers=self.headers())
+    def post(
+        self,
+        path: str,
+        json: dict[str, Any],
+        extra_headers: dict[str, str] | None = None,
+    ) -> httpx.Response:
+        headers = self.headers()
+        if extra_headers:
+            headers.update(extra_headers)
+
+        return self._client.post(path, json=json, headers=headers)
 
     def patch(self, path: str, json: dict[str, Any]) -> httpx.Response:
         return self._client.patch(path, json=json, headers=self.headers())
