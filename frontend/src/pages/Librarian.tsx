@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/client';
-
-interface BorrowRequest {
-  id: string;
-  book_id: string;
-  book_title: string;
-  book_author: string;
-  student_name: string;
-  status: 'Pending' | 'Borrowed' | 'Returned';
-  created_at: string;
-}
+import RequestRow from '../components/RequestRow';
+import type { BorrowRequest } from '../components/RequestRow';
 
 class ErrorBoundary extends React.Component<
   { children: React.ReactNode },
@@ -88,18 +80,12 @@ const LibrarianContent: React.FC = () => {
     returned: requests.filter(r => r.status === 'Returned').length,
   };
 
-  const handleMarkAsBorrowed = async (requestId: string) => {
-    try {
-      const response = await api.patch(`/requests/${requestId}/borrow`);
-      // Update the local state with the updated request
-      setRequests(prevRequests =>
-        prevRequests.map(request =>
-          request.id === requestId ? response.data : request
-        )
-      );
-    } catch (err: any) {
-      alert(`Failed to mark request as borrowed: ${err.response?.data?.detail || err.message || 'Unknown error'}`);
-    }
+  const handleRequestUpdate = (updatedRequest: BorrowRequest) => {
+    setRequests((prevRequests) =>
+      prevRequests.map((request) =>
+        request.id === updatedRequest.id ? updatedRequest : request
+      )
+    );
   };
 
   return (
@@ -170,27 +156,11 @@ const LibrarianContent: React.FC = () => {
                   </tr>
                 ) : (
                   filteredRequests.map((request) => (
-                    <tr key={request.id}>
-                      <td className="book-title">{request.book_title}</td>
-                      <td>{request.book_author}</td>
-                      <td>{request.student_name}</td>
-                      <td>
-                        <span className={`status-badge ${request.status.toLowerCase()}`}>
-                          {request.status}
-                        </span>
-                      </td>
-                      <td>{formatDate(request.created_at)}</td>
-                      <td>
-                        {request.status === 'Pending' && (
-                          <button
-                            className="action-btn borrow-btn"
-                            onClick={() => handleMarkAsBorrowed(request.id)}
-                          >
-                            Mark as Borrowed
-                          </button>
-                        )}
-                      </td>
-                    </tr>
+                    <RequestRow
+                      key={request.id}
+                      request={request}
+                      onUpdate={handleRequestUpdate}
+                    />
                   ))
                 )}
               </tbody>

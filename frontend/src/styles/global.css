@@ -225,6 +225,89 @@ button, input {
   color: var(--error);
 }
 
+.requests-table-section {
+  overflow-x: auto;
+  margin-top: 1.5rem;
+}
+
+.table-container {
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.requests-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+.requests-table th,
+.requests-table td {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.requests-table th {
+  color: var(--muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.requests-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.actions-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.action-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.borrow-btn {
+  background: rgba(107, 175, 130, 0.18);
+  color: #b8e1c8;
+}
+
+.return-btn {
+  background: rgba(214, 138, 126, 0.18);
+  color: #f1c8bd;
+}
+
+.action-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.inline-error {
+  color: var(--error);
+  font-size: 0.9rem;
+}
+
+.inline-success {
+  color: var(--success);
+  font-size: 0.9rem;
+}
+
+.no-actions {
+  color: var(--muted);
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
