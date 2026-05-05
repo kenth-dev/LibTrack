@@ -4,7 +4,7 @@ import BookCard from '../components/BookCard';
 import BorrowModal from '../components/BorrowModal';
 
 interface Book {
-  id: number;
+  id: string;
   title: string;
   author: string;
   status: string;
@@ -51,33 +51,50 @@ const Student: React.FC = () => {
   };
 
   const handleConfirmBorrow = () => {
-    // Placeholder for borrow logic (to be implemented in LTA-11)
-    alert(`Borrow request for "${selectedBook?.title}" submitted!`);
-    handleModalClose();
+    fetchBooks();
   };
 
   return (
     <div className="student-view">
-      <h1>Student Book Catalog</h1>
-      <input
-        type="text"
-        placeholder="Search by title or author..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="search-input"
-      />
-      {loading && <p>Loading books...</p>}
-      {error && <p className="error">{error}</p>}
+      <section className="student-hero">
+        <div>
+          <p className="eyebrow">Library Catalog</p>
+          <h1>Browse and borrow books from our collection</h1>
+        </div>
+        <div className="catalog-stats">
+          <span>{books.length} books</span>
+          <span>{filteredBooks.length} visible</span>
+        </div>
+      </section>
+
+      <section className="search-panel">
+        <label htmlFor="catalog-search" className="sr-only">
+          Search books
+        </label>
+        <input
+          id="catalog-search"
+          type="text"
+          placeholder="Input Title or Author"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="search-input"
+        />
+      </section>
+
+      {loading && <p className="status-message">Loading books...</p>}
+      {error && <p className="status-message error">{error}</p>}
+
       <div className="book-grid">
         {filteredBooks.map((book) => (
           <BookCard key={book.id} book={book} onBorrowClick={handleBorrowClick} />
         ))}
       </div>
+
       <BorrowModal
         book={selectedBook}
         isOpen={modalOpen}
         onClose={handleModalClose}
-        onConfirm={handleConfirmBorrow}
+        onConfirmSuccess={handleConfirmBorrow}
       />
     </div>
   );
