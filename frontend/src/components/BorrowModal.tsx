@@ -75,6 +75,10 @@ const BorrowModal: React.FC<BorrowModalProps> = ({ book, isOpen, onClose, onConf
         setSuccess(true);
         // Call parent callback to refresh catalog
         onConfirmSuccess();
+        // Auto-close after 2 seconds
+        setTimeout(() => {
+          onClose();
+        }, 2000);
       }
     } catch (err: any) {
       const errorMessage = err.response?.data?.detail || 'Failed to submit borrow request';
