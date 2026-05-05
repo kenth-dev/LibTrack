@@ -52,7 +52,7 @@ def create_borrow_request(payload: BorrowRequestCreate) -> BorrowRequestRead:
 	book_response = client.get(
 		"/rest/v1/books",
 		params={
-			"select": "id,title",
+			"select": "id,title,author",
 			"id": f"eq.{payload.book_id}",
 			"limit": 1,
 		},
@@ -66,6 +66,7 @@ def create_borrow_request(payload: BorrowRequestCreate) -> BorrowRequestRead:
 		raise HTTPException(status_code=422, detail="book_id does not exist")
 
 	book_title = books[0]["title"]
+	book_author = books[0]["author"]
 
 	insert_response = client.post(
 		"/rest/v1/borrow_requests?select=id,book_id,student_name,status,created_at",
@@ -90,6 +91,7 @@ def create_borrow_request(payload: BorrowRequestCreate) -> BorrowRequestRead:
 		id=created["id"],
 		book_id=created["book_id"],
 		book_title=book_title,
+		book_author=book_author,
 		student_name=created["student_name"],
 		status=created["status"],
 		created_at=created["created_at"],
@@ -156,55 +158,57 @@ def mark_request_as_borrowed(request_id: str) -> BorrowRequestRead:
 
 @router.patch("/requests/{request_id}/return", response_model=BorrowRequestRead)
 def mark_request_as_returned(request_id: str) -> BorrowRequestRead:
-	client = get_supabase_client()
+    client = get_supabase_client()
 
-	request_response = client.get(
-		"/rest/v1/borrow_requests",
-		params={
-			"select": "id,book_id,student_name,status,created_at,books(title)",
-			"id": f"eq.{request_id}",
-			"limit": 1,
-		},
-	)
+    request_response = client.get(
+        "/rest/v1/borrow_requests",
+        params={
+            "select": "id,book_id,student_name,status,created_at,books(title,author)",
+            "id": f"eq.{request_id}",
+            "limit": 1,
+        },
+    )
 
-	if request_response.status_code != 200:
-		raise HTTPException(status_code=500, detail="Failed to fetch borrow request")
+    if request_response.status_code != 200:
+        raise HTTPException(status_code=500, detail="Failed to fetch borrow request")
 
-	rows = request_response.json()
-	if not rows:
-		raise HTTPException(status_code=404, detail="Borrow request not found")
+    rows = request_response.json()
+    if not rows:
+        raise HTTPException(status_code=404, detail="Borrow request not found")
 
-	request_row = rows[0]
-	if request_row["status"] != "Borrowed":
-		raise HTTPException(
-			status_code=409,
-			detail="Only borrowed requests can be marked as Returned",
-		)
+    request_row = rows[0]
+    if request_row["status"] != "Borrowed":
+        raise HTTPException(
+            status_code=409,
+            detail="Only borrowed requests can be marked as Returned",
+        )
 
-	update_request_response = client.patch(
-		f"/rest/v1/borrow_requests?id=eq.{request_id}",
-		json={"status": "Returned"},
-	)
+    update_request_response = client.patch(
+        f"/rest/v1/borrow_requests?id=eq.{request_id}",
+        json={"status": "Returned"},
+    )
 
-	if update_request_response.status_code not in {200, 204}:
-		raise HTTPException(status_code=500, detail="Failed to update borrow request status")
+    if update_request_response.status_code not in {200, 204}:
+        raise HTTPException(status_code=500, detail="Failed to update borrow request status")
 
-	book_id = request_row["book_id"]
-	update_book_response = client.patch(
-		f"/rest/v1/books?id=eq.{book_id}",
-		json={"status": "Available"},
-	)
+    book_id = request_row["book_id"]
+    update_book_response = client.patch(
+        f"/rest/v1/books?id=eq.{book_id}",
+        json={"status": "Available"},
+    )
 
-	if update_book_response.status_code not in {200, 204}:
-		raise HTTPException(status_code=500, detail="Failed to update book status")
+    if update_book_response.status_code not in {200, 204}:
+        raise HTTPException(status_code=500, detail="Failed to update book status")
 
-	book_title = (request_row.get("books") or {}).get("title", "")
+    book_title = (request_row.get("books") or {}).get("title", "")
+    book_author = (request_row.get("books") or {}).get("author", "")
 
-	return BorrowRequestRead(
-		id=request_row["id"],
-		book_id=book_id,
-		book_title=book_title,
-		student_name=request_row["student_name"],
-		status="Returned",
-		created_at=request_row["created_at"],
-	)
+    return BorrowRequestRead(
+        id=request_row["id"],
+        book_id=book_id,
+        book_title=book_title,
+        book_author=book_author,
+        student_name=request_row["student_name"],
+        status="Returned",
+        created_at=request_row["created_at"],
+    )
