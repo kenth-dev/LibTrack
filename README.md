@@ -18,7 +18,7 @@ Copy `backend/.env.example` to `backend/.env` and set:
 ### Run the API
 ```powershell
 cd backend
-uvicorn app.main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
 ### Check the app
