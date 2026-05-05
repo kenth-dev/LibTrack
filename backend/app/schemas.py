@@ -25,6 +25,7 @@ class BorrowRequestRead(BaseModel):
     id: str
     book_id: str
     book_title: str
+    book_author: str
     student_name: str
     status: RequestStatus
     created_at: str
