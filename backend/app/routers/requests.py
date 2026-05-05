@@ -12,7 +12,7 @@ def get_borrow_requests() -> list[BorrowRequestRead]:
 	response = client.get(
 		"/rest/v1/borrow_requests",
 		params={
-			"select": "id,book_id,student_name,status,created_at,books(title)",
+			"select": "id,book_id,student_name,status,created_at,books(title,author)",
 			"order": "created_at.desc",
 		},
 	)
@@ -23,12 +23,15 @@ def get_borrow_requests() -> list[BorrowRequestRead]:
 	rows = response.json()
 	requests: list[BorrowRequestRead] = []
 	for row in rows:
-		book_title = (row.get("books") or {}).get("title", "")
+		book_data = row.get("books") or {}
+		book_title = book_data.get("title", "")
+		book_author = book_data.get("author", "")
 		requests.append(
 			BorrowRequestRead(
 				id=row["id"],
 				book_id=row["book_id"],
 				book_title=book_title,
+				book_author=book_author,
 				student_name=row["student_name"],
 				status=row["status"],
 				created_at=row["created_at"],
@@ -100,7 +103,7 @@ def mark_request_as_borrowed(request_id: str) -> BorrowRequestRead:
 	request_response = client.get(
 		"/rest/v1/borrow_requests",
 		params={
-			"select": "id,book_id,student_name,status,created_at,books(title)",
+			"select": "id,book_id,student_name,status,created_at,books(title,author)",
 			"id": f"eq.{request_id}",
 			"limit": 1,
 		},
@@ -138,11 +141,13 @@ def mark_request_as_borrowed(request_id: str) -> BorrowRequestRead:
 		raise HTTPException(status_code=500, detail="Failed to update book status")
 
 	book_title = (request_row.get("books") or {}).get("title", "")
+	book_author = (request_row.get("books") or {}).get("author", "")
 
 	return BorrowRequestRead(
 		id=request_row["id"],
 		book_id=book_id,
 		book_title=book_title,
+		book_author=book_author,
 		student_name=request_row["student_name"],
 		status="Borrowed",
 		created_at=request_row["created_at"],

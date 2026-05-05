@@ -9,7 +9,7 @@ class Settings(BaseSettings):
 
     supabase_url: AnyHttpUrl | str = ""
     supabase_key: str = ""
-    cors_origin: str = "http://localhost:5173"
+    cors_origin: str = "http://localhost:5173,http://localhost:5174,http://localhost:5175"
 
 
 @lru_cache(maxsize=1)
