@@ -1,12 +1,5 @@
 import React from 'react';
-
-interface Book {
-  id: string;
-  title: string;
-  author: string;
-  status: string;
-  cover_image?: string;
-}
+import type { Book } from '../api/types';
 
 interface BookCardProps {
   book: Book;

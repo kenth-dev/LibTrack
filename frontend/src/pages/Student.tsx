@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api/client';
+import { getBooks } from '../api/books';
+import type { Book } from '../api/types';
 import BookCard from '../components/BookCard';
 import BorrowModal from '../components/BorrowModal';
 
-interface Book {
-  id: string;
-  title: string;
-  author: string;
-  status: string;
-  cover_image?: string;
-}
 
 const Student: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -25,10 +19,10 @@ const Student: React.FC = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await api.get('/books');
-      setBooks(response.data);
-    } catch (err) {
-      setError('Failed to load books');
+      const bookData = await getBooks();
+      setBooks(bookData);
+    } catch (err: any) {
+      setError(err.message || 'Failed to load books');
     } finally {
       setLoading(false);
     }

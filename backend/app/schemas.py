@@ -14,6 +14,7 @@ class BookRead(BaseModel):
     title: str
     author: str
     status: BookStatus
+    cover_image: str | None = None
 
 
 class BorrowRequestCreate(BaseModel):

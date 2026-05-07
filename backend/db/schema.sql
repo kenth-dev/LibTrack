@@ -11,6 +11,7 @@ CREATE TABLE books (
     title TEXT NOT NULL,
     author TEXT NOT NULL,
     status book_status NOT NULL DEFAULT 'Available',
+    cover_image TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

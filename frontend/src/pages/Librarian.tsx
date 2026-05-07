@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api/client';
+import { getBorrowRequests } from '../api/requests';
 import RequestRow from '../components/RequestRow';
-import type { BorrowRequest } from '../components/RequestRow';
+import type { BorrowRequest } from '../api/types';
 
 class ErrorBoundary extends React.Component<
   { children: React.ReactNode },
@@ -57,11 +57,11 @@ const LibrarianContent: React.FC = () => {
 
   const fetchRequests = async () => {
     try {
-      const response = await api.get('/requests');
-      setRequests(response.data);
+      const requestData = await getBorrowRequests();
+      setRequests(requestData);
     } catch (err: any) {
       console.error('Error fetching requests:', err);
-      setError(`Failed to load requests: ${err.message || 'Unknown error'}`);
+      setError(err.message || 'Failed to load requests');
     } finally {
       setLoading(false);
     }

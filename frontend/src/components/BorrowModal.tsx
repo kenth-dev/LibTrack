@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import api from '../api/client';
-
-interface Book {
-  id: string;
-  title: string;
-  author: string;
-  status: string;
-  cover_image?: string;
-}
+import { createBorrowRequest } from '../api/requests';
+import type { Book } from '../api/types';
 
 interface BorrowModalProps {
   book: Book | null;
@@ -66,24 +59,18 @@ const BorrowModal: React.FC<BorrowModalProps> = ({ book, isOpen, onClose, onConf
     setError(null);
 
     try {
-      const response = await api.post('/borrow', {
+      await createBorrowRequest({
         book_id: book.id,
         student_name: borrowerName.trim(),
       });
 
-      if (response.status === 201) {
-        setSuccess(true);
-        // Call parent callback to refresh catalog
-        onConfirmSuccess();
-        // Auto-close after 2 seconds
-        setTimeout(() => {
-          onClose();
-        }, 2000);
-      }
+      setSuccess(true);
+      onConfirmSuccess();
+      setTimeout(() => {
+        onClose();
+      }, 2000);
     } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || 'Failed to submit borrow request';
-      setError(errorMessage);
-      // Keep the borrower name so user can fix and retry
+      setError(err.message || 'Failed to submit borrow request');
     } finally {
       setLoading(false);
     }
