@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
-import api from '../api/client';
-
-export interface BorrowRequest {
-  id: string;
-  book_id: string;
-  book_title: string;
-  book_author: string;
-  student_name: string;
-  status: 'Pending' | 'Borrowed' | 'Returned';
-  created_at: string;
-}
+import { markRequestAsBorrowed, markRequestAsReturned } from '../api/requests';
+import type { BorrowRequest } from '../api/types';
 
 interface RequestRowProps {
   request: BorrowRequest;
@@ -37,17 +28,15 @@ const RequestRow: React.FC<RequestRowProps> = ({ request, onUpdate }) => {
     setSuccessMessage(null);
 
     try {
-      const response = await api.patch(`/requests/${request.id}/${action}`);
-      const updatedRequest = response.data ?? {
-        ...request,
-        status: request.status === 'Pending' ? 'Borrowed' : 'Returned',
-      };
+      const updatedRequest =
+        request.status === 'Pending'
+          ? await markRequestAsBorrowed(request.id)
+          : await markRequestAsReturned(request.id);
       onUpdate(updatedRequest);
       setSuccessMessage(`Request marked as ${actionLabel}.`);
       window.setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err: any) {
-      const message = err.response?.data?.detail || err.message || 'Failed to update request';
-      setActionError(message);
+      setActionError(err.message || 'Failed to update request');
     } finally {
       setActionLoading(false);
     }
