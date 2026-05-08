@@ -10,6 +10,7 @@ CREATE TABLE books (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL,
     author TEXT NOT NULL,
+    description TEXT,
     status book_status NOT NULL DEFAULT 'Available',
     cover_image TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
