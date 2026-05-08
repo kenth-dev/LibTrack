@@ -1,4 +1,5 @@
 import React from 'react';
+import { resolveApiUrl } from '../api/client';
 import type { Book } from '../api/types';
 
 interface BookCardProps {
@@ -17,11 +18,15 @@ const BookCard: React.FC<BookCardProps> = ({ book, onBorrowClick }) => {
     >
       <div className="book-panel">
         <div className="book-art">
-          <img
-            src={book.cover_image || 'https://via.placeholder.com/240x320?text=Cover'}
-            alt={`${book.title} cover`}
-            className="book-art-image"
-          />
+          {book.cover_image ? (
+            <img
+              src={resolveApiUrl(book.cover_image)}
+              alt={`${book.title} cover`}
+              className="book-art-image"
+            />
+          ) : (
+            <div className="cover placeholder">No cover available</div>
+          )}
         </div>
         <div className="book-copy">
           <p className="book-label">Book</p>

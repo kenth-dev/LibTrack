@@ -76,7 +76,7 @@ const RequestRow: React.FC<RequestRowProps> = ({ request, onUpdate }) => {
     <>
       <tr>
         <td className="book-title">{request.book_title}</td>
-        <td>{request.book_author}</td>
+        <td>{request.author ?? request.book_author}</td>
         <td>{request.student_name}</td>
         <td>
           <span className={`status-badge ${request.status.toLowerCase()}`}>

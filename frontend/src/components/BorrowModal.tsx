@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createBorrowRequest } from '../api/requests';
+import { resolveApiUrl } from '../api/client';
 import type { Book } from '../api/types';
 
 interface BorrowModalProps {
@@ -90,11 +91,15 @@ const BorrowModal: React.FC<BorrowModalProps> = ({ book, isOpen, onClose, onConf
             <div className="modal-book-details">
               <div className="modal-book-card">
                 <div className="modal-book-art">
-                  <img
-                    src={book.cover_image || 'https://via.placeholder.com/220x300?text=Cover'}
-                    alt={`${book.title} cover`}
-                    className="modal-book-cover"
-                  />
+                  {book.cover_image ? (
+                    <img
+                      src={resolveApiUrl(book.cover_image)}
+                      alt={`${book.title} cover`}
+                      className="modal-book-cover"
+                    />
+                  ) : (
+                    <div className="cover placeholder">No cover available</div>
+                  )}
                 </div>
                 <div className="modal-book-copy">
                   <p className="modal-label">TITLE</p>
