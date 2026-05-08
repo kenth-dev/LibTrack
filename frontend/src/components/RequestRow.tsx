@@ -5,6 +5,7 @@ import type { BorrowRequest } from '../api/types';
 interface RequestRowProps {
   request: BorrowRequest;
   onUpdate: (updatedRequest: BorrowRequest) => void;
+  onStatusChange?: (message: string, type: 'success' | 'error') => void;
 }
 
 const formatDate = (dateString: string) => {
@@ -15,17 +16,15 @@ const formatDate = (dateString: string) => {
   });
 };
 
-const RequestRow: React.FC<RequestRowProps> = ({ request, onUpdate }) => {
+const RequestRow: React.FC<RequestRowProps> = ({ request, onUpdate, onStatusChange }) => {
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleActionClick = async () => {
     const action = request.status === 'Pending' ? 'borrow' : 'return';
-    const actionLabel = request.status === 'Pending' ? 'borrowed' : 'returned';
+    const actionLabel = request.status === 'Pending' ? 'marked as borrowed' : 'marked as returned';
     setActionLoading(true);
     setActionError(null);
-    setSuccessMessage(null);
 
     try {
       const updatedRequest =
@@ -33,10 +32,15 @@ const RequestRow: React.FC<RequestRowProps> = ({ request, onUpdate }) => {
           ? await markRequestAsBorrowed(request.id)
           : await markRequestAsReturned(request.id);
       onUpdate(updatedRequest);
-      setSuccessMessage(`Request marked as ${actionLabel}.`);
-      window.setTimeout(() => setSuccessMessage(null), 3000);
+      if (onStatusChange) {
+        onStatusChange(`Request ${actionLabel}.`, 'success');
+      }
     } catch (err: any) {
-      setActionError(err.message || 'Failed to update request');
+      const errorMsg = err.message || 'Failed to update request';
+      setActionError(errorMsg);
+      if (onStatusChange) {
+        onStatusChange(errorMsg, 'error');
+      }
     } finally {
       setActionLoading(false);
     }
@@ -87,7 +91,6 @@ const RequestRow: React.FC<RequestRowProps> = ({ request, onUpdate }) => {
         <td className="actions-cell">
           {renderActionButton()}
           {actionError && <div className="inline-error">{actionError}</div>}
-          {successMessage && <div className="inline-success">{successMessage}</div>}
         </td>
       </tr>
     </>

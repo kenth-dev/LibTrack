@@ -148,7 +148,11 @@ const BorrowModal: React.FC<BorrowModalProps> = ({ book, isOpen, onClose, onConf
           </>
         ) : (
           <div className="modal-success-notification">
-            <div className="success-icon">✓</div>
+            <div className="success-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M20 6L9 17l-5-5"/>
+              </svg>
+            </div>
             <p className="success-message">Request submitted successfully!</p>
           </div>
         )}

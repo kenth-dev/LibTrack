@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getBorrowRequests } from '../api/requests';
 import RequestRow from '../components/RequestRow';
 import type { BorrowRequest } from '../api/types';
@@ -38,10 +39,12 @@ class ErrorBoundary extends React.Component<
 }
 
 const LibrarianContent: React.FC = () => {
+  const navigate = useNavigate();
   const [requests, setRequests] = useState<BorrowRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -88,8 +91,24 @@ const LibrarianContent: React.FC = () => {
     );
   };
 
+  const handleStatusChange = (message: string, type: 'success' | 'error') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000);
+  };
+
   return (
     <div className="librarian-view">
+      <button 
+        className="back-button" 
+        onClick={() => navigate('/')}
+        aria-label="Go back to home"
+        title="Back to home"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </button>
       <section className="librarian-hero">
         <div>
           <p className="eyebrow">Librarian Dashboard</p>
@@ -117,21 +136,44 @@ const LibrarianContent: React.FC = () => {
       </section>
 
       <section className="search-panel">
-        <label htmlFor="request-search" className="sr-only">
-          Search requests
-        </label>
-        <input
-          id="request-search"
-          type="text"
-          placeholder="Search by book title or student name"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="search-input"
-        />
+        <div className="search-input-wrapper">
+          <svg className="search-icon-inside" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input
+            id="request-search"
+            type="text"
+            placeholder="Search by book title or student name"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="search-input"
+          />
+        </div>
       </section>
 
       {loading && <p className="status-message">Loading requests...</p>}
       {error && <p className="status-message error">{error}</p>}
+
+      {notification && (
+        <div className={`notification notification-${notification.type}`}>
+          <div className="notification-content">
+            <div className="notification-icon">
+              {notification.type === 'success' ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 8v4M12 16h.01"/>
+                </svg>
+              )}
+            </div>
+            <p className="notification-message">{notification.message}</p>
+          </div>
+        </div>
+      )}
 
       {!loading && !error && (
         <section className="requests-table-section">
@@ -160,6 +202,7 @@ const LibrarianContent: React.FC = () => {
                       key={request.id}
                       request={request}
                       onUpdate={handleRequestUpdate}
+                      onStatusChange={handleStatusChange}
                     />
                   ))
                 )}
