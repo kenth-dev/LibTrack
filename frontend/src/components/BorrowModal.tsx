@@ -90,21 +90,30 @@ const BorrowModal: React.FC<BorrowModalProps> = ({ book, isOpen, onClose, onConf
 
             <div className="modal-book-details">
               <div className="modal-book-card">
-                <div className="modal-book-art">
-                  {book.cover_image ? (
-                    <img
-                      src={resolveApiUrl(book.cover_image)}
-                      alt={`${book.title} cover`}
-                      className="modal-book-cover"
-                    />
-                  ) : (
-                    <div className="cover placeholder">No cover available</div>
-                  )}
-                </div>
-                <div className="modal-book-copy">
-                  <p className="modal-label">TITLE</p>
-                  <h3>{book.title}</h3>
-                  <p className="modal-author">{book.author}</p>
+                <div className="modal-book-grid">
+                  <div className="modal-book-art">
+                    {book.cover_image ? (
+                      <img
+                        src={resolveApiUrl(book.cover_image)}
+                        alt={`${book.title} cover`}
+                        className="modal-book-cover"
+                      />
+                    ) : (
+                      <div className="cover placeholder">No cover available</div>
+                    )}
+                  </div>
+                  <div className="modal-book-info">
+                    <div className="modal-book-copy">
+                      <p className="modal-label">TITLE</p>
+                      <h3>{book.title}</h3>
+                      <p className="modal-author">by {book.author}</p>
+                    </div>
+                    {book.description && (
+                      <div className="modal-book-description">
+                        <p>{book.description}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -138,15 +147,9 @@ const BorrowModal: React.FC<BorrowModalProps> = ({ book, isOpen, onClose, onConf
             </form>
           </>
         ) : (
-          <div className="modal-success-panel">
+          <div className="modal-success-notification">
             <div className="success-icon">✓</div>
-            <h2>Request Submitted!</h2>
-            <p className="success-copy">
-              <strong>{borrowerName || 'You'}</strong> has submitted a borrow request for <strong>{book.title}</strong>.
-            </p>
-            <button type="button" onClick={onClose} className="btn-primary">
-              Close
-            </button>
+            <p className="success-message">Request submitted successfully!</p>
           </div>
         )}
       </div>
