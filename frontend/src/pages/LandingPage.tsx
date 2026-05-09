@@ -24,15 +24,15 @@ export default function LandingPage() {
   };
 
   return (
-    <div
-      className="landing-page"
-      style={{
-        backgroundImage: `linear-gradient(180deg, rgba(22, 5, 6, 0.86) 0%, rgba(22, 5, 6, 0.88) 100%), url(${landingBackground})`,
-      }}
-    >
+    <div className="landing-page">
       <div className="landing-page__overlay" aria-hidden="true" />
 
-      <section className="landing-page__brand-panel">
+      <section
+        className="landing-page__brand-panel"
+        style={{
+          backgroundImage: `url(${landingBackground})`,
+        }}
+      >
         <div className="landing-page__brand-top">
           <span className="landing-page__mark" aria-hidden="true">
             +
@@ -40,8 +40,10 @@ export default function LandingPage() {
           <span className="landing-page__brand-text">LibTrack</span>
         </div>
 
-        <h1 className="landing-page__title">Your school library simplified</h1>
-        <p className="landing-page__subtitle">A dark academia-inspired library workspace.</p>
+        <div className="landing-page__headline">
+          <h1 className="landing-page__title">Your library simplified</h1>
+          <p className="landing-page__subtitle">A dark academia-inspired library workspace.</p>
+        </div>
 
         <div className="landing-page__features">
           <article className="landing-page__feature-card">

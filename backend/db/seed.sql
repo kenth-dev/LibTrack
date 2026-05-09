@@ -1,10 +1,33 @@
 -- LibTrack Seed Data
 -- Run this in Supabase SQL Editor after schema.sql to populate test data
 
-INSERT INTO books (title, author, status, cover_image) VALUES
-    ('The Great Gatsby', 'F. Scott Fitzgerald', 'Available', 'http://localhost:8000/static/covers/book-cover-placeholder.svg'),
-    ('To Kill a Mockingbird', 'Harper Lee', 'Available', 'http://localhost:8000/static/covers/book-cover-placeholder.svg'),
-    ('1984', 'George Orwell', 'Borrowed', 'http://localhost:8000/static/covers/book-cover-placeholder.svg'),
-    ('Pride and Prejudice', 'Jane Austen', 'Available', 'http://localhost:8000/static/covers/book-cover-placeholder.svg'),
-    ('The Catcher in the Rye', 'J.D. Salinger', 'Borrowed', 'http://localhost:8000/static/covers/book-cover-placeholder.svg'),
-    ('Brave New World', 'Aldous Huxley', 'Available', 'http://localhost:8000/static/covers/book-cover-placeholder.svg');
+INSERT INTO books (title, author, description, status, cover_image) VALUES
+    ('The Art of War', 'Sun Tzu', 'An ancient Chinese text on strategy and warfare. Its lessons are widely applied today in business, leadership, and conflict resolution.', 'Available', '/static/books/art-of-war.jpg'),
+    ('A Game of Thrones', 'George R. R. Martin', 'Noble families compete for control of the Iron Throne in a brutal, politically complex world. Alliances shift constantly, and power often comes at a deadly cost.', 'Available', '/static/books/a-game-of-thrones.jpg'),
+    ('Jane Eyre', 'Charlotte Brontë', 'An orphaned girl grows into a strong, independent woman while seeking love and respect. Her journey challenges social class and gender expectations.', 'Available', '/static/books/jane-eyre.jpg'),
+    ('Crazy Rich Asians', 'Kevin Kwan', 'A woman discovers her boyfriend comes from one of the wealthiest families in Asia. She is thrust into a glamorous but judgmental world of extreme privilege.', 'Borrowed', '/static/books/crazy-rich-asians.jpg'),
+    ('I Am Malala', 'Malala Yousafzai', 'A young girl speaks out for girls'' education under Taliban rule. After surviving an attack, she becomes a global symbol of courage and advocacy.', 'Available', '/static/books/i-am-malala.jpg'),
+    ('Anna Karenina', 'Leo Tolstoy', 'A tragic story of love, infidelity, and societal pressure in imperial Russia. It explores the consequences of passion and the search for meaning.', 'Available', '/static/books/anna-karenina.jpg'),
+    ('The Art of Seduction', 'Robert Greene', 'A guide to the psychology of attraction and persuasion. It analyzes historical figures and tactics used to influence others.', 'Available', '/static/books/the-art-of-seduction.jpg'),
+    ('The 48 Laws of Power', 'Robert Greene', 'A controversial manual on gaining and maintaining power. It presents strategic principles drawn from history and politics.', 'Borrowed', '/static/books/the-48-laws-of-power.jpg'),
+    ('The Metamorphosis', 'Franz Kafka', 'A man wakes up transformed into a giant insect. The story explores alienation, identity, and the burden of societal expectations.', 'Available', '/static/books/the-metamorphosis.jpg'),
+    ('Pride and Prejudice', 'Jane Austen', 'A sharp romantic comedy about love, class, and first impressions. Elizabeth Bennet navigates pride, prejudice, and societal expectations.', 'Available', '/static/books/pride-and-prejudice.jpg'),
+    ('1984', 'George Orwell', 'A chilling look at a totalitarian future where "Big Brother" is always watching, exploring themes of surveillance and the loss of individual identity.', 'Borrowed', '/static/books/1984.jpg'),
+    ('To Kill a Mockingbird', 'Harper Lee', 'Through the eyes of young Scout Finch, this story tackles racial injustice and the loss of innocence in the American South.', 'Available', '/static/books/to-kill-a-mockingbird.jpg'),
+    ('The Great Gatsby', 'F. Scott Fitzgerald', 'A glittering yet tragic portrait of the Jazz Age, centered on a mysterious millionaire''s obsessive pursuit of the American Dream.', 'Available', '/static/books/the-great-gatsby.jpg'),
+    ('Moby-Dick', 'Herman Melville', 'An epic exploration of obsession and fate, centered on Captain Ahab''s relentless hunt for a legendary white whale.', 'Available', '/static/books/moby-dick.jpg'),
+    ('War and Peace', 'Leo Tolstoy', 'A sweeping epic that intertwines the lives of five aristocratic families against the backdrop of Napoleon''s invasion of Russia.', 'Available', '/static/books/war-and-peace.jpg'),
+    ('The Catcher in the Rye', 'J.D. Salinger', 'The quintessential novel of teenage angst, following Holden Caulfield as he grapples with "phoniness" and the loss of innocence.', 'Borrowed', '/static/books/the-catcher-in-the-rye.jpg'),
+    ('The Hobbit', 'J.R.R. Tolkien', 'A reluctant hobbit embarks on a quest to reclaim treasure from a dragon. Along the way, he discovers courage and friendship.', 'Available', '/static/books/the-hobbit.jpg'),
+    ('The Lord of the Rings', 'J.R.R. Tolkien', 'The definitive high-fantasy epic. A fellowship of heroes embarks on a perilous quest to destroy the One Ring.', 'Available', '/static/books/the-lord-of-the-rings.jpg'),
+    ('Brave New World', 'Aldous Huxley', 'Set in a high-tech "utopia" of genetic engineering, this novel questions the cost of a painless, consumer-driven society.', 'Available', '/static/books/brave-new-world.jpg'),
+    ('The Hunger Games', 'Suzanne Collins', 'In a dystopian world, teens are forced to fight to the death for entertainment. One girl becomes a symbol of resistance.', 'Available', '/static/books/the-hunger-games.jpg'),
+    ('Frankenstein', 'Mary Shelley', 'Victor Frankenstein creates a sentient being from scavenged parts, only to be haunted by the tragic consequences of his ambition.', 'Available', '/static/books/frankenstein.jpg'),
+    ('Crime and Punishment', 'Fyodor Dostoevsky', 'A deep dive into the mind of a student who commits murder to prove a theory, only to be consumed by guilt and the search for redemption.', 'Available', '/static/books/crime-and-punishment.jpg'),
+    ('The Alchemist', 'Paulo Coelho', 'A modern fable about a shepherd boy searching for treasure, teaching readers to listen to their hearts and follow their "Personal Legend."', 'Available', '/static/books/the-alchemist.jpg'),
+    ('The Diary of a Young Girl', 'Anne Frank', 'The poignant, real-life account of a Jewish girl hiding from the Nazis, offering a timeless perspective on hope amidst horror.', 'Available', '/static/books/the-diary-of-a-young-girl.jpg'),
+    ('Great Expectations', 'Charles Dickens', 'Follows the orphan Pip as he rises from a humble apprentice to a gentleman thanks to a mysterious benefactor.', 'Available', '/static/books/great-expectations.jpg'),
+    ('Don Quixote', 'Miguel de Cervantes', 'The story of a Spaniard who, obsessed with chivalry, sets out to revive knighthood, famously "tilting at windmills."', 'Available', '/static/books/don-quixote.jpg'),
+    ('Lord of the Flies', 'William Golding', 'When schoolboys are stranded on an island, their attempt at self-governance quickly dissolves into savagery.', 'Available', '/static/books/lord-of-the-flies.jpg'),
+    ('Hamlet', 'William Shakespeare', 'A masterpiece about the Prince of Denmark, who struggles with the moral dilemma of whether to avenge his father''s murder.', 'Available', '/static/books/hamlet.jpg'),
+    ('On the Origin of Species', 'Charles Darwin', 'The ground-breaking scientific work that introduced the theory of evolution by natural selection.', 'Available', '/static/books/on-the-origins-of-species.jpg');

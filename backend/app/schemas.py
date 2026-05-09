@@ -13,8 +13,9 @@ class BookRead(BaseModel):
     id: str
     title: str
     author: str
+    description: str | None = None
     status: BookStatus
-    cover_image: str | None = None
+    cover_image: str
 
 
 class BorrowRequestCreate(BaseModel):
@@ -26,7 +27,11 @@ class BorrowRequestRead(BaseModel):
     id: str
     book_id: str
     book_title: str
+    author: str
     book_author: str
     student_name: str
     status: RequestStatus
     created_at: str
+
+
+BookOut = BookRead

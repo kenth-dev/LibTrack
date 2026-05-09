@@ -5,15 +5,17 @@ export interface Book {
   id: string;
   title: string;
   author: string;
+  description?: string;
   status: BookStatus;
-  cover_image?: string;
+  cover_image: string;
 }
 
 export interface BorrowRequest {
   id: string;
   book_id: string;
   book_title: string;
-  book_author: string;
+  author: string;
+  book_author?: string;
   student_name: string;
   status: RequestStatus;
   created_at: string;
