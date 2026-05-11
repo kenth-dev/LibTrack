@@ -11,6 +11,10 @@ class Settings(BaseSettings):
     supabase_key: str = ""
     cors_origin: str = "http://localhost:5173,http://localhost:5174,http://localhost:5175"
 
+    @property
+    def cors_origins(self) -> list[str]:
+        return [origin.strip() for origin in self.cors_origin.split(",") if origin.strip()]
+
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
